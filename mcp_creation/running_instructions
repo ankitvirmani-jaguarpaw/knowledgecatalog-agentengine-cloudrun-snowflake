@@ -1,0 +1,19 @@
+##Deployment##
+
+gcloud run deploy snowflake-catalog \
+    --source . \
+    --region=us-central1 \
+    --project=agents-demo-495412 \
+    --set-env-vars="SNOWFLAKE_USER=ANKITVIRMANI,SNOWFLAKE_ACCOUNT=BQNBKPB-UY14335,SNOWFLAKE_ROLE=ACCOUNTADMIN,SNOWFLAKE_WAREHOUSE=COMPUTE_WH" \
+    --set-secrets="SNOWFLAKE_PRIVATE_KEY_PEM=snowflake-rsa-key:latest" \
+    --no-allow-unauthenticated
+
+##IAM permissions###
+
+gcloud run services add-iam-policy-binding snowflake-catalog \
+    --region=us-central1 \
+    --project=agents-demo-495412 \
+    --member="user:$(gcloud config get-value account)" \
+    --role="roles/run.invoker"
+
+
