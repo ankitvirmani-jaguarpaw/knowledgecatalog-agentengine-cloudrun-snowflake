@@ -1,0 +1,22 @@
+##Deploy the agent
+adk deploy agent_engine \
+  --project=agents-demo-495412 \
+  --region=us-central1 \
+  --display_name="Snowflake Knowledge Catalog Agent" \
+  --trace_to_cloud \
+  --otel_to_cloud \
+  snowflake_catalog_agent
+
+
+
+
+#Because snowflake-catalog was deployed with --no-allow-unauthenticated, the Agent Engine execution identity requires the roles/run.invoker role:
+
+SVC_ACCOUNT="283243243997-compute@developer.gserviceaccount.com"
+
+gcloud run services add-iam-policy-binding snowflake-catalog \
+    --region=us-central1 \
+    --project=agents-demo-495412 \
+    --member="serviceAccount:${SVC_ACCOUNT}" \
+    --role="roles/run.invoker"
+
