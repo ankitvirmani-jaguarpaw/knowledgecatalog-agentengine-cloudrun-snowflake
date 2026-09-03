@@ -1,10 +1,30 @@
-##Deployment##
+#Deploying the Key to Cloud Run
+#Generate key pair:
+#gCloud
+
+openssl genrsa 2048 | openssl pkcs8 -topk8 -inform PEM -out rsa_key.p8 -nocrypt
+openssl rsa -in rsa_key.p8 -pubout -out rsa_key.pub
+Attach rsa_key.pub to the user in Snowflake:
+
+#Snowflake Conole SQL
+ALTER USER <YOUR_USER> SET RSA_PUBLIC_KEY='<BASE64_PUBLIC_KEY_CONTENT>';
+Store rsa_key.p8 in Secret Manager and attach it to Cloud Run:
+
+#gCloud
+gcloud secrets create snowflake-rsa-key \
+    --data-file="rsa_key.p8" \
+    --project=agents-demo-495412
+
+gcloud secrets add-iam-policy-binding snowflake-rsa-key \
+    --member="serviceAccount:283243243997-compute@developer.gserviceaccount.com" \
+    --role="roles/secretmanager.secretAccessor" \
+    --project=agents-demo-495412
 
 gcloud run deploy snowflake-catalog \
     --source . \
     --region=us-central1 \
     --project=agents-demo-495412 \
-    --set-env-vars="SNOWFLAKE_USER=ANKITVIRMANI,SNOWFLAKE_ACCOUNT=BQNBKPB-UY14335,SNOWFLAKE_ROLE=ACCOUNTADMIN,SNOWFLAKE_WAREHOUSE=COMPUTE_WH" \
+    --set-env-vars="SNOWFLAKE_USER=ANKITVIRMANI,SNOWFLAKE_ACCOUNT=UY14335,SNOWFLAKE_ROLE=ACCOUNTADMIN,SNOWFLAKE_WAREHOUSE=COMPUTE_WH" \
     --set-secrets="SNOWFLAKE_PRIVATE_KEY_PEM=snowflake-rsa-key:latest" \
     --no-allow-unauthenticated
 
