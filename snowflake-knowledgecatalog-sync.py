@@ -15,10 +15,11 @@ CUSTOM_ENTRY_TYPE = f"projects/{GCP_PROJECT_ID}/locations/{GCP_LOCATION}/entryTy
 SYSTEM_SCHEMA_ASPECT_TYPE = "projects/dataplex-types/locations/global/aspectTypes/schema"
 SYSTEM_OVERVIEW_ASPECT_TYPE = "projects/dataplex-types/locations/global/aspectTypes/overview"
 
+###Please fill these values#####
 SNOWFLAKE_CONFIG = {
-    "user": "ANKITVIRMANI",
-    "password": "Password@13579",
-    "account": "BQNBKPB-UY14335",
+    "user": "",
+    "password": "",
+    "account": "",
     "warehouse": "COMPUTE_WH",
     "database": "SNOWFLAKE_SAMPLE_DATA",
     "schema": "TPCDS_SF100TCL"
